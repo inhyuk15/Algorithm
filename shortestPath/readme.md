@@ -40,8 +40,7 @@ https://github.com/inhyuk15/Algorithm/tree/main/shortestPath/dijkstra/11779
 
 일단 기본적으로
 
-## 단방향 그래프의 경우에 x2v에서 v2x를 구하고 싶을 때
-
+단방향 그래프의 경우에 x2v에서 v2x를 구하고 싶을 때
 간선을 뒤짚는 발상은 정말 좋은 발상이다.
 
 
