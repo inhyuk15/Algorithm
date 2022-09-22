@@ -61,7 +61,7 @@ dist배열을 사용할 때 현재까지의 거리는 dist[here]에 기록되고
 ---
 
   
-[https://www.acmicpc.net/problem/13460](13460번) 
+[13460번](https://www.acmicpc.net/problem/13460)
   
 이 문제는 bfs 문제의 집대성 그 자체이다.
 반례 때문에 엄청 오래걸리기도 했는데
