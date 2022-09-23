@@ -4,3 +4,4 @@ topological sort
 
 ![topological_sort_example](https://github.com/inhyuk15/Algorithm/blob/main/topologicalSort/topological_sort.pngaw=true)
 
+![topological sort](./topological_sort.png)
