@@ -78,3 +78,32 @@ dist배열을 사용할 때 현재까지의 거리는 dist[here]에 기록되고
   
 코드가 굉장히 복잡해서 (4차원이고 board 사용하는 문제인 만큼) 기능을 쪼개서 함수로 나누었다.
 그런 거 외에는 본질은 단순한 bfs 문제이다.
+
+
+---
+  
+[16236번](https://www.acmicpc.net/problem/16236)
+
+이 문제는 그냥 뭐랄까 조건이 졸라 많다..
+문제를 꼼꼼하게 읽어야한다.
+  
+숫자가 작기 때문에 총 20 * 20 번의 목적지에 20 * 20 의 시간복잡도인 bfs를 각각 해도 문제가 없다는 생각을 해야한다.
+  
+그리고 조건만 잘 맞춰서 bfs...
+  
+유의해야할 점이 있다면
+  
+```cpp:16236.cpp
+          if(block[hy][hx] != 0 && block[hy][hx] < curSize && (hy != y || hx != x)) {
+            if(dist[hy][hx] < minCost) {
+                ret.clear();
+                ret.push_back({hy, hx});
+                minCost = dist[hy][hx];
+            }
+            else if(dist[hy][hx] == minCost) {
+                ret.push_back({hy, hx});
+            }
+        }
+```
+  
+  다음과 같이 코드를 짜서 최단 거리인 정점들을 모두 구할 수 있다는 것
