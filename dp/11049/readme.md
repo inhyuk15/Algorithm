@@ -22,7 +22,11 @@ i부터 j까지의 행렬 곱셈 가중치의 부분해이기 때문이다.
 1번째부터 n번째까지의 행렬곱을 구하는데
 
 다음 식이 유추된다.
+
+pseudo code
+```cpp:dp.cpp
 for j <- 1 to n
 	for i <- j-1 to 1
 		for k <- i to j-1
 			dp[i][j] = min(dp[i][k] + dp[k+1][j] + a[k][0]*a[k][1]*a[k+1][1]
+```
