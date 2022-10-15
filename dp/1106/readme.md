@@ -26,6 +26,7 @@ a[i][0] = 인원 당 비용, a[i][1] = 인원
 c = 필요한 인원, n = 도시의 수
 
 
+pseudo code
 ```cpp:dp.cpp
 for i <- 0 1 to c
 	for j <- 1 to n
