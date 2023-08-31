@@ -1,0 +1,177 @@
+#include<iostream>
+#include <vector>
+#include <cstdlib>
+#include <cstring>
+#include <algorithm>
+#include <queue>
+#include <map>
+
+#define endl '\n'
+
+using namespace std;
+const int INF = 0x3f3f3f3f;
+
+const int dy[4] = { 0,0,1,-1};
+const int dx[4] = { 1,-1,0,0};
+
+class Miro {
+public:
+    Miro(int h, int w, vector<string>& block, vector<char>& keys)
+        :h_(h), w_(w), block_(block), keys_(keys),visited(h_+2, vector<bool>(w_+2, false)) ,score_(0) {
+        initStartPoints();
+    }
+
+    void start() {
+        for (auto p: enterPoints) {
+            startFind(p.first, p.second);
+        }
+    }
+
+    void initStartPoints() {
+        enterPoints.clear();
+        for (int i =0; i<w_+2; i++) {
+            enterPoints.push_back({0, i});
+            enterPoints.push_back({h_+1, i});
+        }
+        for (int i =1; i< h_+1; i++) {
+            enterPoints.push_back({i, 0});
+            enterPoints.push_back({i, w_+1});
+        }
+    }
+
+    void startFind(int hy, int hx) {
+        if (visited[hy][hx]) return;
+
+        char curBlock = block_[hy][hx];
+        if (isDoc(curBlock)) {
+            score_++;
+            block_[hy][hx] = '.';
+            curBlock = block_[hy][hx];
+        }
+
+        if (isKey(curBlock)) {
+            keys_.push_back(curBlock);
+            char convDoorCode = convUpperCase(curBlock);
+            block_[hy][hx] = '.';
+            curBlock = block_[hy][hx];
+
+            if (hasVisitedDoor(convDoorCode)) {
+                for (auto doorPos: doorMemory[convDoorCode]) {
+                    block_[doorPos.first][doorPos.second] = '.';
+                    startFind(doorPos.first, doorPos.second);
+                }   
+            }
+        }
+
+        if (isDoor(curBlock)) {
+            char convKeyCode = convLowerCase(curBlock);
+            if (hasKeyMatched(convKeyCode)) {
+                // unlock
+                block_[hy][hx] = '.';
+                curBlock = block_[hy][hx];
+            }
+            else {
+                if (doorMemory.find(curBlock) == doorMemory.end()) {
+                    doorMemory[curBlock] = vector<pair<int,int>>();
+                    doorMemory[curBlock].push_back({hy, hx});
+                }
+                else {
+                    doorMemory[curBlock].push_back({hy, hx});
+                }
+                return;
+            }
+        }
+        
+        visited[hy][hx] = true;
+        for (int k =0; k <4; k++) {
+            int ny = hy + dy[k];
+            int nx = hx + dx[k];
+            if (ny < 0 || nx < 0 || ny > h_+1 || nx > w_+1) continue;
+            char nextBlock = block_[ny][nx];
+            if (isWall(nextBlock)) continue;
+            if (!visited[ny][nx]) startFind(ny, nx);
+        }
+    }
+
+    int getScore() { return score_; }
+
+private:
+    int h_, w_;
+    vector<pair<int,int>> enterPoints;
+    vector<string> block_;
+    vector<char> keys_;
+    map<char, vector<pair<int,int>>> doorMemory;
+    vector<vector<bool>> visited;
+
+    int score_;
+    
+    char convLowerCase(char c) {
+        bool flag = ('A' <= c && c <= 'Z');
+        if (!flag) cout << "wrong in convert lowercase" << endl;
+        return c - 'A' + 'a';
+    }
+    char convUpperCase(char c) {
+        bool flag = ('a' <= c && c <= 'z');
+        if (!flag) cout << "wrong in convert uppercase" << endl;
+        return c - 'a' + 'A';
+    }
+
+    bool isWall(char c) { return (c == '*'); }
+    bool isDoor(char c) { return ('A' <= c && c <= 'Z'); }
+    bool isKey(char c) { return ('a' <= c && c <= 'z'); }
+    bool isDoc(char c) { return (c == '$'); }
+
+    bool hasVisitedDoor(char doorCode) {
+        return (doorMemory.find(doorCode) != doorMemory.end());
+    }
+    bool hasKeyMatched(char keyCode) {
+        for (auto k: keys_) {
+            if (keyCode == k) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+};
+
+int main(int argc, char** argv)
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+	
+    int t;
+    cin >> t;
+    vector<string> block;
+    vector<char> keys;
+    while (t--) {
+        block.clear();
+        int h, w;
+        cin >> h >> w;
+        string verticalBorder(w + 2, '.');
+        block.push_back(verticalBorder);
+        for (int i = 1; i<=h; i++) {
+            string s = "";
+            cin >> s;
+            s = '.' + s + '.';
+            block.push_back(s);
+        }
+        block.push_back(verticalBorder);
+
+        keys.clear();
+        string key;
+        cin >> key;
+        if (key != "0") { 
+            for (auto k: key) {
+                keys.push_back(k);
+            }
+        }
+        
+        Miro miro(h, w, block, keys);
+        miro.start();
+
+        cout << miro.getScore() << endl;
+    }
+
+}
+
